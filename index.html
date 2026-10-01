@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reading Team Signals</title>
+<meta name="description" content="Learning Experience Design case study: eliciting and teaching a Scrum facilitator's tacit skill of reading team signals.">
+<style>
+  html { color-scheme: light dark; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<style>
+  /* Layout: single reading column; challenge cards expand in place to full reports.
+     Identity carried from the project one-pager — teal ink, amber eyebrow, warm paper. */
+  :root {
+    --paper:      #F7F5F0;   /* warm off-white ground */
+    --surface:    #FFFFFF;   /* card fill */
+    --ink:        #1B2A2E;   /* near-black teal ink */
+    --ink-soft:   #47585B;   /* secondary text, hue-biased grey */
+    --teal:       #18565B;   /* heading / structural accent */
+    --teal-deep:  #103E42;   /* hero ground */
+    --amber:      #B0602F;   /* eyebrow / marker accent */
+    --rule:       #D7DEDB;   /* hairlines */
+    --rule-soft:  #E7EBE8;
+    --shadow:     0 1px 2px rgba(16,42,46,.05), 0 8px 28px rgba(16,42,46,.07);
+
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans:  "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+
+    --measure: 65ch;
+    --maxw: 940px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #12191B;
+      --surface:   #182123;
+      --ink:       #EAEEEC;
+      --ink-soft:  #A6B4B4;
+      --teal:      #6FC1C4;
+      --teal-deep: #0C1618;
+      --amber:     #E29663;
+      --rule:      #2A3639;
+      --rule-soft: #212C2E;
+      --shadow:    0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #12191B;
+    --surface:   #182123;
+    --ink:       #EAEEEC;
+    --ink-soft:  #A6B4B4;
+    --teal:      #6FC1C4;
+    --teal-deep: #0C1618;
+    --amber:     #E29663;
+    --rule:      #2A3639;
+    --rule-soft: #212C2E;
+    --shadow:    0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; text-wrap: balance; line-height: 1.15; margin: 0; }
+  p { margin: 0 0 1em; max-width: var(--measure); }
+  a { color: var(--teal); text-underline-offset: 3px; }
+
+  .eyebrow {
+    font-family: var(--sans);
+    text-transform: uppercase;
+    letter-spacing: .13em;
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--amber);
+  }
+
+  /* ---------- shell ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: 20px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: var(--teal-deep);
+    color: #EAF3F2;
+    padding-block: clamp(48px, 8vw, 88px);
+  }
+  .hero .eyebrow { color: #E9B48F; }
+  .hero h1 {
+    color: #FFFFFF;
+    font-size: clamp(2rem, 5.4vw, 3.3rem);
+    margin: .5rem 0 .7rem;
+    max-width: 18ch;
+  }
+  .hero .lead {
+    color: #C9DAD8;
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    max-width: 54ch;
+    margin-bottom: 1.6rem;
+  }
+  .status {
+    display: flex; gap: .7rem; align-items: baseline;
+    border-left: 3px solid #E9B48F;
+    padding: .1rem 0 .1rem .9rem;
+    max-width: 52ch;
+    margin-bottom: 1.7rem;
+  }
+  .status .k { font-size: .72rem; letter-spacing: .13em; text-transform: uppercase; font-weight: 600; color: #E9B48F; white-space: nowrap; }
+  .status .v { color: #C9DAD8; font-size: .95rem; }
+  .cta {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: #E9B48F; color: #1B2A2E;
+    font-weight: 600; font-size: .98rem;
+    padding: .7rem 1.15rem; border-radius: 3px;
+    text-decoration: none;
+  }
+  .cta:hover { background: #f0c4a6; }
+  .cta .arw { font-size: 1.1em; }
+
+  /* ---------- brief ---------- */
+  .brief { padding-block: clamp(40px, 6vw, 64px); border-bottom: 1px solid var(--rule); }
+  .brief .intro { font-size: 1.12rem; max-width: 58ch; }
+  .glance {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px; background: var(--rule);
+    border: 1px solid var(--rule); border-radius: 4px; overflow: hidden;
+    margin: 1.8rem 0;
+  }
+  .glance > div { background: var(--surface); padding: 1rem 1.15rem; }
+  .glance .k { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--amber); font-weight: 600; }
+  .glance .v { margin-top: .35rem; font-size: .96rem; color: var(--ink); }
+
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem 2rem; margin-top: 1.4rem; }
+  .role-item { border-top: 2px solid var(--teal); padding-top: .6rem; }
+  .role-item .rt { font-weight: 600; color: var(--teal); font-size: .95rem; }
+  .role-item .rd { font-size: .9rem; color: var(--ink-soft); }
+
+  .orient { margin-top: 1.8rem; font-size: 1.02rem; color: var(--ink-soft); font-style: italic; max-width: 56ch; }
+
+  .sub-label { font-size: .82rem; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-soft); font-weight: 600; margin-bottom: .5rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
+  .chip { border: 1px solid var(--rule); background: var(--surface); border-radius: 100px; padding: .3rem .8rem; font-size: .85rem; color: var(--ink-soft); }
+
+  /* ---------- challenges ---------- */
+  .challenges { padding-block: clamp(40px, 6vw, 64px); }
+  .section-head { margin-bottom: 2rem; }
+  .section-head h2 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+
+  .cards { display: flex; flex-direction: column; gap: 1.4rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-head { padding: 1.5rem clamp(1.2rem, 3vw, 1.9rem); }
+  .card-num { font-family: var(--serif); font-size: 1.1rem; color: var(--amber); font-weight: 600; }
+  .card-kicker { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin-left: .6rem; }
+  .card h3 { font-size: clamp(1.25rem, 2.6vw, 1.55rem); margin: .55rem 0 .7rem; }
+  .card .teaser { color: var(--ink-soft); max-width: 62ch; margin-bottom: 0; }
+
+  .toggle {
+    margin-top: 1.15rem;
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--sans); font-weight: 600; font-size: .92rem;
+    color: var(--teal); padding: 0;
+  }
+  .toggle .tri { transition: transform .2s ease; display: inline-block; font-size: .8em; }
+  .toggle[aria-expanded="true"] .tri { transform: rotate(90deg); }
+  .toggle .more { display: inline; }
+  .toggle .less { display: none; }
+  .toggle[aria-expanded="true"] .more { display: none; }
+  .toggle[aria-expanded="true"] .less { display: inline; }
+
+  .report {
+    border-top: 1px solid var(--rule-soft);
+    padding: 1.6rem clamp(1.2rem, 3vw, 1.9rem) 1.9rem;
+  }
+  .report h4 { font-family: var(--serif); font-size: 1.15rem; color: var(--teal); margin: 0 0 .8rem; }
+  .report p { font-size: 1rem; }
+  .report .subhead { font-weight: 600; color: var(--ink); margin-top: 1.4rem; }
+  .report ul.plain { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.6rem; }
+  .report ul.plain > li { padding-left: 1rem; border-left: 3px solid var(--amber); }
+  .report ul.plain .bt { font-weight: 600; color: var(--ink); display: block; margin-bottom: .3rem; }
+
+  /* ---------- image placeholders ---------- */
+  .figs { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.4rem 0 .4rem; }
+  figure { margin: 0; }
+  .ph {
+    background: repeating-linear-gradient(135deg, var(--rule-soft), var(--rule-soft) 11px, transparent 11px, transparent 22px), var(--surface);
+    border: 1px dashed var(--rule);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: .74rem;
+    padding: .6rem;
+    overflow: hidden;
+  }
+  /* placeholders: uniform landscape box now; real images will size to their own proportions */
+  .ph { width: 320px; max-width: 100%; aspect-ratio: 16 / 9; }
+  .ph .fn { display: block; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .68rem; color: var(--amber); margin-top: .35rem; word-break: break-all; }
+  .shot { max-width: 360px; width: 100%; height: auto; display: block;
+          border: 1px solid var(--rule); border-radius: 5px; background: var(--surface); }
+  figcaption { font-size: .8rem; color: var(--ink-soft); margin-top: .4rem; max-width: 320px; }
+
+  /* ---------- reflection ---------- */
+  .reflection { padding-block: clamp(40px, 6vw, 64px); border-top: 1px solid var(--rule); }
+  .refl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 1.4rem; }
+  .refl-col h3 { font-size: 1.15rem; color: var(--teal); border-bottom: 2px solid var(--teal); padding-bottom: .5rem; margin-bottom: .8rem; }
+  .refl-col p { font-size: 1rem; }
+
+  /* ---------- footer ---------- */
+  footer { background: var(--teal-deep); color: #C9DAD8; padding-block: clamp(36px, 5vw, 52px); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; align-items: baseline; }
+  footer a { color: #E9B48F; text-decoration: none; word-break: break-all; }
+  footer a:hover { text-decoration: underline; }
+  footer .fl { display: flex; flex-direction: column; gap: .25rem; }
+  footer .fk { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: #7FA0A0; font-weight: 600; }
+
+  @media (max-width: 480px) {
+    body { font-size: 16px; }
+    .status { flex-direction: column; gap: .2rem; }
+    .ph.landscape { width: 100%; max-width: 320px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600&display=swap">
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Learning Experience Design · Case study</div>
+    <h1>Towards a high-performing team</h1>
+    <p class="lead">A low-cost, low-hassle approach to diagnosing team well-being. An interactive lecture and scaffolded practice that teach a Scrum facilitator's tacit skill of reading "signals" of team health.</p>
+    <div class="status">
+      <span class="k">Status</span>
+      <span class="v">Built, deployed to web and LMS, and instrumented to collect interaction data.</span>
+    </div>
+    <a class="cta" href="https://gleeful-rabanadas-7a81ef.netlify.app/" target="_blank" rel="noopener">Try the live module <span class="arw">→</span></a>
+  </div>
+</header>
+
+<!-- ===================== BRIEF ===================== -->
+<section class="brief">
+  <div class="wrap">
+    <p class="intro">A deployed interactive e-learning module that teaches a Scrum facilitator's tacit skill of reading "signals" of team health. It was built by eliciting that skill through the Critical Decision Method and repacking it into an interactive lecture and scaffolded practice.</p>
+
+    <div class="glance">
+      <div><div class="k">Method</div><div class="v">Cognitive Task Analysis — Critical Decision Method (CDM)</div></div>
+      <div><div class="k">Built with</div><div class="v">Articulate Storyline 3 · DaVinci Resolve</div></div>
+      <div><div class="k">Deployment</div><div class="v">Web (Netlify) + Moodle LMS with interaction tracking</div></div>
+    </div>
+
+    <div class="sub-label">The roles I played</div>
+    <div class="roles">
+      <div class="role-item"><div class="rt">Knowledge elicitor</div><div class="rd">CTA / Critical Decision Method</div></div>
+      <div class="role-item"><div class="rt">Methodologist</div><div class="rd">Learner experience, structure, mechanics</div></div>
+      <div class="role-item"><div class="rt">Developer</div><div class="rd">Implementation in Articulate Storyline 3</div></div>
+      <div class="role-item"><div class="rt">Visual designer / editor</div><div class="rd">Visual and video assets</div></div>
+    </div>
+
+    <p class="orient">What follows is the description of the task, the four challenges I ran into, and how I solved each. For complete reports and images click "read the full account".</p>
+
+    <div style="margin-top:2rem">
+      <div class="sub-label">The SME</div>
+      <p style="color:var(--ink-soft);max-width:56ch;margin:0">A Scrum facilitator with a proven record of building high-performing teams at scale in an IT context.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CHALLENGES ===================== -->
+<section class="challenges">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Four challenges, four solutions</div>
+      <h2>Challenges &amp; solutions</h2>
+    </div>
+    <div class="cards">
+
+      <!-- CHALLENGE 1 -->
+      <article class="card">
+        <div class="card-head">
+          <div><span class="card-num">01</span><span class="card-kicker">SME collaboration</span></div>
+          <h3>Adopting a teachable theoretical model</h3>
+          <p class="teaser">The SME perceived their diagnostic skill as intuition loosely connected to Scrum values. To make it teachable, I needed a more explicit model. "Scrum-expected behaviour" would have worked, except for the word <em>expected</em>: it turned out to be a trigger word, and started blocking adoption of the Scrum model as foundational.</p>
+          <button class="toggle" aria-expanded="false" aria-controls="r1">
+            <span class="tri">▶</span><span class="more">Read the full account</span><span class="less">Collapse</span>
+          </button>
+        </div>
+        <div class="report" id="r1" hidden>
+          <h4>Establishing a teachable principle beneath the practical expertise</h4>
+          <p>As expected, in the interviews the SME delivered detailed reports of instances, valuable stories of what they did and why it worked. Also in alignment with the literature on knowledge elicitation and SME collaboration, they did not explicitly state the underlying principle their decisions rested on. They had stopped referring to any guidebook long ago; the principles were internalised, and in the interviews they only briefly mentioned a connection to the Scrum framework: "it must be somewhere in the Scrum values, or the Scrum pillars."</p>
+          <p>For a learning module that was a problem: for the skill to be teachable, I needed an explicit framework for the learner to stand on. There is a lot of judgment involved in this skill, so a stated norm against which incidents could be judged, serving as a basis for deciding which signals mattered and which didn't, was vital.</p>
+          <p>The framework came from the SME; my job was to turn it into an actionable input for the learner. When I asked what made a team healthy, they answered in Scrum's own terms: openness, respect, commitment, and said plainly that they didn't want to "invent Scrum," since the team in question was already a Scrum team. However, the practical, teachable link between that framework and the incidents they described still seemed missing.</p>
+          <p>My idea was that the thing the SME called "a signal" was, in fact, a discrepancy between the behaviour a Scrum-aligned team would show and the behaviour that was actually observed. Scrum-aligned behaviour was something the SME mentioned as "normal," while the SME's "significant signal" was Scrum-misaligned behaviour. This framing promised to turn a set of loose intuitions into a teachable rule.</p>
+          <div class="figs">
+            <figure><img class="shot" src="images/Scrum_values.JPG" alt="Scrum_values.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scrum_values.JPG</span>'}))"></figure>
+          </div>
+          <p>When I first approached this through the idea of expected versus unexpected behaviour, the SME became defensive. To a facilitator, "expect" and "expectation" sound like "bias" and "prejudice", i.e. the things they must avoid, focusing instead on staying open and un-expectant with a team. After stumbling on that word twice, I changed tactic.</p>
+          <p>Instead of resolving the lexical misalignment, I translated the Scrum values from the official guide into concrete observable behaviours and matched them against the incidents the SME had already described. Framing the model in terms of alignment or misalignment with Scrum rather than in terms of met or unmet expectations enabled easy adoption.</p>
+          <p>In the module the word "expect" appears exactly once, inside a task ("In a healthy team discussing a problem, what do you expect to see?"), and never as a governing concept; elsewhere Scrum-expected behaviour is called "the norm."</p>
+          <p>The model was approved, and key slides now reference the official Scrum principles directly, thus rooting the expert's practical expertise in a well-established framework and making it relevant and teachable.</p>
+        </div>
+      </article>
+
+      <!-- CHALLENGE 2 -->
+      <article class="card">
+        <div class="card-head">
+          <div><span class="card-num">02</span><span class="card-kicker">Knowledge elicitation</span></div>
+          <h3>Knowledge elicitation through the optics of backward design</h3>
+          <p class="teaser">I used the Critical Decision Method, but found that applying its probe set exactly as presented in the literature didn't reliably deliver the specific inputs my assessment-and-feedback design needed. I solved this by applying principles of backward design to knowledge elicitation and planning the CDM sweep sessions so they would reliably provide content for my learning design.</p>
+          <button class="toggle" aria-expanded="false" aria-controls="r2">
+            <span class="tri">▶</span><span class="more">Read the full account</span><span class="less">Collapse</span>
+          </button>
+        </div>
+        <div class="report" id="r2" hidden>
+          <p>I know that learning happens when the learner receives feedback on their choices or behaviour, which is the core of formative-assessment-driven teaching. Consequently, for learning to happen, the learner must be given enough options to choose from, so that the process of selection triggers various aspects of the skill in focus, such as different lines of reasoning. In formative assessments I prefer not to use obvious distractors, the options that visibly don't belong. They could be used in summative assessment, but their instructional value is low.</p>
+          <p>In my case it meant that for formative assessments I needed 3 to 4 options: one target correct option and 2–3 spoiler options that would sound like a realistic possibility. In the CDM framework, this is covered by the probe "What mistake might a novice make in this situation?"; however, for my ideal learning experience to be complete, I also needed answers to questions like: What line of reasoning might lead a novice to this decision? What interpretation of the situation, roles and goals might lead a novice to such a decision? What will be the immediate or postponed outcomes of that decision? Is this decision always incorrect, or only in this context? What about this context makes it incorrect? What knowledge should the operator have in order to identify this context as unsuitable for this decision?</p>
+          <div class="figs">
+            <figure><img class="shot" src="images/Selection_of_options.jpg" alt="Selection_of_options.jpg" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Selection_of_options.jpg</span>'}))"></figure>
+          </div>
+          <p>On the one hand, CDM has been designed to provide this information. On the other, in my perspective, applying a raw, generic set of probes would first leave the elicitor dependent on the SME's memory and ability to systematise their knowledge and experience; and second, the necessary bits of information would be scattered around the transcript, resulting in more work at the processing stage. Tailoring the set of probes for a particular teaching framework resulted in a more rewarding experience for both interviewer and interviewee, saved processing time, and I found it a more reliable tool for eliciting exactly the knowledge that would populate my teaching framework.</p>
+          <p class="subhead">To me, this is backward design applied to knowledge elicitation.</p>
+          <p>As in conventional backward design, where the learning content is selected with respect to the desired outcomes, here I let the structure of the future learning module guide the flow of the questions in the interview.</p>
+          <p>Interestingly, I landed on this idea when I noticed I lacked material for an interaction, while in the interview the probe set had been fully covered. I ran a short follow-up interview with questions worded specifically to close the identified gaps. It was very smooth and productive, so I am planning to use this approach onwards.</p>
+        </div>
+      </article>
+
+      <!-- CHALLENGE 3 -->
+      <article class="card">
+        <div class="card-head">
+          <div><span class="card-num">03</span><span class="card-kicker">Methodological</span></div>
+          <h3>A multi-dimensional subject matter</h3>
+          <p class="teaser">The subject matter turned out to be multi-dimensional: it can be defined by presence as much as by absence, it is context-dependent, it triggers actions with long-reaching consequences, and it is a decision factor in a high-stakes, high-visibility environment. All of this forced me toward a specific approach to the instructional design.</p>
+          <button class="toggle" aria-expanded="false" aria-controls="r3">
+            <span class="tri">▶</span><span class="more">Read the full account</span><span class="less">Collapse</span>
+          </button>
+        </div>
+        <div class="report" id="r3" hidden>
+          <p>One goal of the module is to introduce the concept of "a signal" as a starting point in low-cost, non-invasive diagnostics of a Scrum team's well-being. According to the SME, "a signal is an event or an absence of event which triggers a facilitator as potentially symptomatic." In other words, the same human behaviour may be a signal in one context and a routine in another, and sometimes the facilitator should get triggered when others notice nothing, because that "nothing" is indeed the signal.</p>
+          <p>This starting point alone may be too complicated to be thoroughly explained in a lecture, with example contexts and example events or absences of events; if not too complicated, then unbearably boring, for sure.</p>
+          <p>The second goal is to teach the user how to assess the importance of a signal, and how to decide on the moment and form of handling it. The number of options to choose from would be too high to explain in a conventional lecture format with an assessment afterwards.</p>
+          <p>At the same time, the material is built around the existing Scrum events, values, principles, roles and flow. The target learner will recognise the roles, procedures and problems, so the only new teachable thing is not the "what" but the "how": how to do things differently from what most people do, and how to benefit from it. These considerations led to a design that relied on feedback as the primary vehicle of instruction. After a short input, the learner is offered a choice in a familiar context, and instruction is presented either in "consider this" pop-ups or as feedback after a choice.</p>
+          <p>The assessments are not graded and allow unlimited attempts; some let the learner scroll through all the options, read comments and in-place inputs, and make the choice only after that. The scenario-based assessment lets the user see the possible outcomes of each of the four choices they are offered, and either confirm the target choice or explain in a free-form survey their choice, should it differ from the target one.</p>
+          <div class="figs">
+            <figure><img class="shot" src="images/Watch.JPG" alt="Watch.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Watch.JPG</span>'}))"></figure>
+            <figure><img class="shot" src="images/Scenario_choice.JPG" alt="Scenario_choice.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scenario_choice.JPG</span>'}))"></figure>
+            <figure><img class="shot" src="images/Scenario_outcome_vide_call.JPG" alt="Scenario_outcome_vide_call.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scenario_outcome_vide_call.JPG</span>'}))"></figure>
+            <figure><img class="shot" src="images/Scrum_values_positive_feedback.JPG" alt="Scrum_values_positive_feedback.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scrum_values_positive_feedback.JPG</span>'}))"></figure>
+            <figure><img class="shot" src="images/Scrum_values_negative_feedback.JPG" alt="Scrum_values_negative_feedback.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scrum_values_negative_feedback.JPG</span>'}))"></figure>
+          </div>
+          <p>In this way I reduced passive listening time; rooted the material in the learners' everyday practice; gave the user a low-stakes environment to consider and weigh possibilities in; ensured that the relevant information is presented exactly when needed; and ensured that the final decision is not dictated, but chosen by the learner.</p>
+        </div>
+      </article>
+
+      <!-- CHALLENGE 4 -->
+      <article class="card">
+        <div class="card-head">
+          <div><span class="card-num">04</span><span class="card-kicker">Technical</span></div>
+          <h3>Development: constraints and solutions</h3>
+          <p class="teaser">I was working solo, without a coding background or a budget for premium tools. Some design requirements could not be met with built-in or free-tier solutions, so I had to be resourceful.</p>
+          <button class="toggle" aria-expanded="false" aria-controls="r4">
+            <span class="tri">▶</span><span class="more">Read the full account</span><span class="less">Collapse</span>
+          </button>
+        </div>
+        <div class="report" id="r4" hidden>
+          <ul class="plain">
+            <li>
+              <span class="bt">Behavioural tracking to the LMS</span>
+              <p>My design needed custom variables and a data pipeline to send learner-interaction data to Moodle. I specified what to capture and how; the JavaScript was implemented with AI assistance, and I handled the integration, error reporting, and debugging.</p>
+              <div class="figs">
+                <figure><img class="shot" src="images/JavaScript_1.JPG" alt="JavaScript_1.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>JavaScript_1.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/JavaScript_2.JPG" alt="JavaScript_2.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>JavaScript_2.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Signals_learner_data.JPG" alt="Signals_learner_data.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Signals_learner_data.JPG</span>'}))"></figure>
+              </div>
+            </li>
+            <li>
+              <span class="bt">A simulated team meeting from single-avatar tools</span>
+              <p>The practice scenes needed footage of an online group call, but I only had a single-speaker avatar generator (Adobe Firefly). I recorded the participants separately and edited them into a convincing group call in DaVinci Resolve.</p>
+              <div class="figs">
+                <figure><img class="shot" src="images/team_call.JPG" alt="team_call.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>team_call.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Scenario_outcome_vide_call.JPG" alt="Scenario_outcome_vide_call.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Scenario_outcome_vide_call.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/DaVinci_Resolve.JPG" alt="DaVinci_Resolve.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>DaVinci_Resolve.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/DaVinci_Resolve_2.JPG" alt="DaVinci_Resolve_2.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>DaVinci_Resolve_2.JPG</span>'}))"></figure>
+              </div>
+            </li>
+            <li>
+              <span class="bt">A bespoke "thinking-together" interaction</span>
+              <p>Some parts of the module needed assessment mechanics but the feel of a think-together experience. I built a custom interaction from states, variables, and conditional logic to keep the conversational tone of voice.</p>
+              <div class="figs">
+                <figure><img class="shot" src="images/Click_to_start.JPG" alt="Click_to_start.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Click_to_start.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Think_together_1.JPG" alt="Think_together_1.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Think_together_1.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Think_together_2.JPG" alt="Think_together_2.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Think_together_2.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Think_together_3.JPG" alt="Think_together_3.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Think_together_3.JPG</span>'}))"></figure>
+                <figure><img class="shot" src="images/Think_together_4.JPG" alt="Think_together_4.JPG" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ph',innerHTML:'<span class=&quot;fn&quot;>Think_together_4.JPG</span>'}))"></figure>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REFLECTION ===================== -->
+<section class="reflection">
+  <div class="wrap">
+    <div class="eyebrow">Reflection</div>
+    <div class="refl-grid">
+      <div class="refl-col">
+        <h3>Lessons learnt</h3>
+        <p>The main lessons are in the field of knowledge elicitation. First: don't act as if you understand the subject matter, and don't fool yourself into believing you grasp its underlying principles. That leads to false, factually ungrounded assumptions, you miss the chance to ask a good question, and valuable knowledge is lost. Instead of acting as an expert in something beyond your grasp, apply the tools of your trade for mutual benefit, such as backward-design principles. To me, the immediate impact of applying those to the interview was very vivid and rewarding.</p>
+      </div>
+      <div class="refl-col">
+        <h3>Skills to refine</h3>
+        <p>Being persistent in extracting all the necessary bits of knowledge, even when the SME dismisses them as trivial, college-taught, or universal. The SME has their optics, but the requirements of instructional design must be met, and sometimes that means being persistent in asking "trivial" questions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <div class="fl">
+      <span class="fk">Live module</span>
+      <a href="https://gleeful-rabanadas-7a81ef.netlify.app/" target="_blank" rel="noopener">gleeful-rabanadas-7a81ef.netlify.app</a>
+    </div>
+    <div class="fl">
+      <span class="fk">LinkedIn</span>
+      <a href="https://www.linkedin.com/in/alexander-pronin-85507a73/" target="_blank" rel="noopener">Alexander Pronin</a>
+    </div>
+    <div class="fl">
+      <span class="fk">Email</span>
+      <span style="color:#C9DAD8">hamekoski@gmail.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var panel = document.getElementById(btn.getAttribute('aria-controls'));
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+      if (!open) { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+  });
+</script>
+
+</html>
